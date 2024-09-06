@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Video</title>
+</head>
+<body>
+    <h1>Watch this Video</h1>
+    
+    <!-- Embed Google Drive Video -->
+    <video id="videoPlayer" width="600" controls>
+        <source src="https://drive.google.com/uc?export=download&id=1yJxJVDbrg7KGtMSD8JXg2HJ5ybI01pza" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+
+        video.onended = function() {
+            window.location.href = "https://web.whatsapp.com/";
+        };
+    </script>
+</body>
+</html>

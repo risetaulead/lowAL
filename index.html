@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video</title>
+    <title>Video Redirect</title>
     <style>
         body, html {
             height: 100%;
@@ -14,63 +14,38 @@
             align-items: center;
             background-color: #000;
         }
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .redirect-button {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: #25D366;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+        video {
+            max-width: 100%;
+            max-height: 100%;
         }
     </style>
 </head>
 <body>
 
-    <!-- Embedding Google Drive Video -->
-    <iframe src="https://drive.google.com/file/d/1yJxJVDbrg7KGtMSD8JXg2HJ5ybI01pza/preview" allow="autoplay"></iframe>
-
-    <!-- Button to redirect to WhatsApp Web, initially hidden -->
-    <button class="redirect-button" onclick="window.location.href='https://web.whatsapp.com'">WhatsApp</button>
+    <!-- Embed the video using the <video> tag -->
+    <video id="myVideo" controls>
+        <!-- Replace the src value with your Google Drive direct download link -->
+        <source src="https://drive.google.com/uc?export=download&id=1yJxJVDbrg7KGtMSD8JXg2HJ5ybI01pza" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     <script>
-        // Handle showing the button after the video ends
-        const iframe = document.querySelector('iframe');
-        const redirectButton = document.querySelector('.redirect-button');
-        
-        iframe.addEventListener('load', () => {
-            const iframeWindow = iframe.contentWindow;
+        // Get the video element
+        const video = document.getElementById('myVideo');
 
-            const checkVideoEnd = setInterval(() => {
-                const video = iframeWindow.document.querySelector('video');
-                if (video) {
-                    // Listen for the ended event
-                    video.addEventListener('ended', () => {
-                        clearInterval(checkVideoEnd);
-                        redirectButton.style.display = 'block'; // Show the button
-                    });
+        // Listen for the 'ended' event
+        video.addEventListener('ended', () => {
+            // Redirect to WhatsApp Web
+            window.location.href = 'https://web.whatsapp.com';
+        });
 
-                    // Also show the button if the user skips to the end
-                    video.addEventListener('timeupdate', () => {
-                        if (video.currentTime >= video.duration - 1) {
-                            clearInterval(checkVideoEnd);
-                            redirectButton.style.display = 'block'; // Show the button
-                        }
-                    });
-                }
-            }, 1000);
+        // Optional: Automatically play the video when the page loads
+        window.addEventListener('load', () => {
+            // Attempt to autoplay the video
+            video.play().catch(error => {
+                // Handle autoplay restrictions
+                console.log('Autoplay failed:', error);
+            });
         });
     </script>
 

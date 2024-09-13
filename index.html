@@ -14,14 +14,38 @@
             align-items: center;
             background-color: #000;
             flex-direction: column;
+            position: relative;
         }
-         iframe {
+        /* Style for the iframe video */
+        iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             border: none;
+            display: none; /* Initially hidden */
+        }
+        /* Style for the start button */
+        #startButton {
+            padding: 20px 40px;
+            font-size: 2em;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 1; /* Ensure button is above iframe */
+        }
+        #startButton:hover {
+            background-color: #218838;
+        }
+        /* Optional: Message display */
+        #message {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 1.2em;
         }
     </style>
 </head>
@@ -30,26 +54,55 @@
     <!-- Embedding Google Drive Video -->
     <iframe id="videoFrame" src="https://drive.google.com/file/d/1yJxJVDbrg7KGtMSD8JXg2HJ5ybI01pza/preview" allow="autoplay"></iframe>
 
-<script>
+    <!-- Start Button -->
+    <button id="startButton">Play Video</button>
+
+    <!-- Optional: Message Area -->
+    <div id="message"></div>
+
+    <script>
         // Set the duration of your video in seconds
-        const VIDEO_DURATION_SECONDS = 270; // Replace with your video's actual duration
+        const VIDEO_DURATION_SECONDS = 310; // Replace with your video's actual duration
 
         // Function to redirect to WhatsApp Web
         function redirectToWhatsApp() {
             window.location.href = 'https://web.whatsapp.com';
         }
 
-        // Start the timer once the iframe has loaded
-        window.addEventListener('load', () => {
-            // Optionally, you can start the timer after a slight delay to ensure the video starts playing
-            setTimeout(() => {
-                // Set the timer for the video's duration
-                setTimeout(redirectToWhatsApp, VIDEO_DURATION_SECONDS * 1000);
-            }, 1000); // 1-second delay before starting the timer
-        });
+        // Function to start the video and timer
+        function startVideo() {
+            // Hide the start button
+            document.getElementById('startButton').style.display = 'none';
 
-        // Optional: Inform the user about the upcoming redirect
-        // You can display a message or a countdown if desired
+            // Show the video iframe
+            const videoFrame = document.getElementById('videoFrame');
+            videoFrame.style.display = 'block';
+
+            // Optionally, you can start playing the video automatically
+            // This depends on the browser's autoplay policies
+            // videoFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+
+            // Start the timer for the video's duration
+            setTimeout(redirectToWhatsApp, VIDEO_DURATION_SECONDS * 1000);
+
+            // Optional: Display a countdown message
+            const messageDiv = document.getElementById('message');
+            let remainingTime = VIDEO_DURATION_SECONDS;
+            messageDiv.textContent = `You will be redirected to WhatsApp in ${remainingTime} seconds.`;
+
+            const countdownInterval = setInterval(() => {
+                remainingTime--;
+                if (remainingTime > 0) {
+                    messageDiv.textContent = `You will be redirected to WhatsApp in ${remainingTime} seconds.`;
+                } else {
+                    clearInterval(countdownInterval);
+                    messageDiv.textContent = 'Redirecting...';
+                }
+            }, 1000);
+        }
+
+        // Attach event listener to the start button
+        document.getElementById('startButton').addEventListener('click', startVideo);
     </script>
 
 </body>
